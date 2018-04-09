@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<worldgeneration>
+<biomes>
+	<biomemap id="01" name="snow"/>
+	<biomemap id="02" name="forest"/>
+	<biomemap id="03" name="pine_forest"/>
+	<biomemap id="04" name="plains"/>
+	<biomemap id="05" name="desert"/>
+	<biomemap id="06" name="water"/>
+	<biomemap id="07" name="radiated"/>
+	<biomemap id="08" name="wasteland"/>
+	<biomemap id="09" name="burnt_forest"/>
+	<biomemap id="10" name="city"/>
+	<biomemap id="11" name="city_wasteland"/>
+	<biomemap id="12" name="wasteland_hub"/>
+	<biomemap id="13" name="caveFloor"/>
+	<biomemap id="14" name="caveCeiling"/>
+
+	<biome name="snow"            biomemapcolor="#FFFFFF"/>
+	<biome name="forest"          biomemapcolor="#EAEAEA"/>
+	<biome name="pine_forest"     biomemapcolor="#D5D5D5"/>
+	<biome name="plains"          biomemapcolor="#C0C0C0"/>
+	<biome name="desert"          biomemapcolor="#AAAAAA"/>
+	<biome name="water"           biomemapcolor="#959595"/>
+	<biome name="wasteland"       biomemapcolor="#808080"/>
+	<biome name="burnt_forest"    biomemapcolor="#6A6A6A"/>
+	<biome name="city"            biomemapcolor="#555555"/>
+	<biome name="city_wasteland"  biomemapcolor="#404040"/>
+	<biome name="wasteland_hub"   biomemapcolor="#2A2A2A"/>
+	<biome name="caveFloor"       biomemapcolor="#151515"/>
+	<biome name="caveCeiling"     biomemapcolor="#000000"/>
+
+	<biome name="radiated"        biomemapcolor="#FF0000"/>
+</biomes>
+</worldgeneration>

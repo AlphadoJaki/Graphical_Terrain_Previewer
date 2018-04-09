@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rwgmixer>
+	<world ruleset="GraphicalTerrainPreviewer" />
+
+	<rulesets>
+		<ruleset name="GraphicalTerrainPreviewer" cell_cache_size="8" cell_size="1800" cell_offset="0" generation_distance="10000" terrain_generator="constant"
+
+			biome_generator="WorldPreview">
+
+<!--**************************************************
+      Change biome_generator to use another mode.
+      3 modes are available.
+
+        1. WorldPreview
+          Map actual in-game world. Show elevation
+          as monotone gradation.
+          -28 is BLACK, 190 is WHITE.
+
+        2. WorldBoundCheck
+          Same as WorldPreview. But show the area
+          out of -28 to 190 as RED.
+
+        3. BoundCheck
+          Show elevation as monotone gradation.
+          -1 is BLACK, 1 is WHITE.
+    **************************************************-->
+
+			<cell_rule name="empty" prob="1"/>
+		</ruleset>
+	</rulesets>
+
+	<cell_rules>
+		<cell_rule name="empty">
+			<hub_rule name="empty" prob="1"/>
+			<wilderness_rule name="empty"/>
+		</cell_rule>
+	</cell_rules>
+
+	<hub_rules>
+		<hub_rule name="empty">
+			<hub_type value="rural"/>
+			<width value="0, 0" />
+			<height value="0, 0" />
+			<prefab_rule name="none"/>
+			<street_gen level="1" length_multiplier="4">
+				<axiom value="+"/>
+			</street_gen>
+		</hub_rule>
+	</hub_rules>
+
+	<wilderness_rules>
+		<wilderness_rule name="empty" spawn_min_max="0,0">
+			<path_adjust_terrain value="false"/>
+			<prefab_rule name="empty" prob="1"/>
+		</wilderness_rule>
+	</wilderness_rules>
+
+	<prefab_rules>
+		<prefab_rule name="none"/>
+	</prefab_rules>
+
+	<terrain_generators>
+		<terrain_generator name="constant" use_old_final="false">
+			<!--DO NOT USE THIS. USE biome_generator INSTEAD.-->
+			<module name="constant" type="Constant"/>
+			<output module="constant"/>
+		</terrain_generator>
+	</terrain_generators>
+
+	<biome_generators>
+		<biome_generator name="WorldPreview">
+			<!--Example terrain code (Vanilla)-->
+			<module name="landBaseBase" type="FastBillow" seed_additive="5">
+				<property name="frequency" value="0.02"/>
+			</module>
+			<module name="scaleLandBaseFilter" type="ScaleBiasOutput">
+				<property name="sourceModule" value="landBaseBase"/>
+				<property name="scale" value="0.25"/>
+				<property name="bias" value="0.25"/>
+			</module>
+			<module name="landBase" type="ClampOutput">
+				<property name="sourceModule" value="scaleLandBaseFilter"/>
+				<property name="bounds" value="0.01,0.5"/>
+			</module>
+			<module name="fastMountainsBase" type="FastRidgedMultifractal">
+				<property name="frequency" value="0.25"/>
+			</module>
+			<module name="fastMountainsT" type="FastTurbulence">
+				<property name="sourceModule" value="fastMountainsBase"/>
+				<property name="power" value="5"/>
+				<property name="frequency" value="0.025"/>
+				<property name="roughness" value="1"/>
+			</module>
+			<module name="fastMountainsScaled" type="ScaleBiasOutput">
+				<property name="sourceModule" value="fastMountainsT"/>
+				<property name="scale" value="0.9"/>
+			</module>
+			<module name="fastWaterBase" type="FastRidgedMultifractal">
+				<property name="frequency" value="0.35"/>
+			</module>
+			<module name="fastWaterBase2" type="InvertOutput">
+				<property name="sourceModule" value="fastWaterBase"/>
+			</module>
+			<module name="fastWaterScaled" type="ScaleBiasOutput">
+				<property name="sourceModule" value="fastWaterBase2"/>
+				<property name="scale" value="1"/>
+				<property name="bias" value="-0.15"/>
+			</module>
+			<module name="fastWaterClamped" type="ClampOutput">
+				<property name="sourceModule" value="fastWaterScaled"/>
+				<property name="bounds" value="-1,0.25"/>
+			</module>
+			<module name="fastWaterFilter" type="FastRidgedMultifractal" seed_additive="3">
+				<property name="frequency" value="0.05"/>
+			</module>
+			<module name="scaleBiasLandFilter" type="ScaleBiasOutput">
+				<property name="sourceModule" value="fastWaterFilter"/>
+				<property name="scale" value="1"/>
+				<property name="bias" value="0.25"/>
+			</module>
+			<module name="fastLandWater" type="Blend">
+				<property name="controlModule" value="scaleBiasLandFilter"/>
+				<property name="sourceModule1" value="landBase"/>
+				<property name="sourceModule2" value="fastWaterClamped"/>
+			</module>
+			<module name="finalLand" type="Blend">
+				<property name="controlModule" value="fastMountainsScaled"/>
+				<property name="sourceModule1" value="fastLandWater"/>
+				<property name="sourceModule2" value="fastMountainsScaled"/>
+			</module>
+			<module name="scaleBiasOutput" type="ScaleBiasOutput">
+				<property name="sourceModule" value="finalLand"/>
+				<property name="scale" value="182"/>
+			</module>
+
+
+			<!--From here, processing code-->
+			<module name="GTPbound1A" type="BiasOutput">
+				<property name="sourceModule" value="scaleBiasOutput"/>
+				<!--Set your output module as sourceModule-->
+				<property name="bias" value="-190"/>
+			</module>
+			<module name="GTPbound1B" type="AbsoluteOutput">
+				<property name="sourceModule" value="GTPbound1A"/>
+			</module>
+			<module name="GTPbound2A" type="BiasOutput">
+				<property name="sourceModule" value="GTPbound1B"/>
+				<property name="bias" value="-218"/>
+			</module>
+			<module name="GTPbound2B" type="AbsoluteOutput">
+				<property name="sourceModule" value="GTPbound2A"/>
+			</module>
+			<module name="GTPboundOut" type="BiasOutput">
+				<property name="sourceModule" value="GTPbound2B"/>
+				<property name="bias" value="-28"/>
+			</module>
+			<module name="GTPscaled" type="ScaleBiasOutput">
+				<property name="sourceModule" value="GTPboundOut"/>
+				<property name="scale" value="0.00916"/>
+				<property name="bias" value="-0.742"/>
+			</module>
+			<module name="GTPout" type="ScaleInput">
+				<property name="sourceModule" value="GTPscaled"/>
+				<property name="x" value="0.001953125"/>
+				<property name="z" value="0.001953125"/>
+			</module>
+
+			<output module="GTPout"/>
+		</biome_generator>
+
+		<biome_generator name="WorldBoundCheck">
+			<!--Example terrain code (Vanilla)-->
+			<module name="landBaseBase" type="FastBillow" seed_additive="5">
+				<property name="frequency" value="0.02"/>
+			</module>
+			<module name="scaleLandBaseFilter" type="ScaleBiasOutput">
+				<property name="sourceModule" value="landBaseBase"/>
+				<property name="scale" value="0.25"/>
+				<property name="bias" value="0.25"/>
+			</module>
+			<module name="landBase" type="ClampOutput">
+				<property name="sourceModule" value="scaleLandBaseFilter"/>
+				<property name="bounds" value="0.01,0.5"/>
+			</module>
+			<module name="fastMountainsBase" type="FastRidgedMultifractal">
+				<property name="frequency" value="0.25"/>
+			</module>
+			<module name="fastMountainsT" type="FastTurbulence">
+				<property name="sourceModule" value="fastMountainsBase"/>
+				<property name="power" value="5"/>
+				<property name="frequency" value="0.025"/>
+				<property name="roughness" value="1"/>
+			</module>
+			<module name="fastMountainsScaled" type="ScaleBiasOutput">
+				<property name="sourceModule" value="fastMountainsT"/>
+				<property name="scale" value="0.9"/>
+			</module>
+			<module name="fastWaterBase" type="FastRidgedMultifractal">
+				<property name="frequency" value="0.35"/>
+			</module>
+			<module name="fastWaterBase2" type="InvertOutput">
+				<property name="sourceModule" value="fastWaterBase"/>
+			</module>
+			<module name="fastWaterScaled" type="ScaleBiasOutput">
+				<property name="sourceModule" value="fastWaterBase2"/>
+				<property name="scale" value="1"/>
+				<property name="bias" value="-0.15"/>
+			</module>
+			<module name="fastWaterClamped" type="ClampOutput">
+				<property name="sourceModule" value="fastWaterScaled"/>
+				<property name="bounds" value="-1,0.25"/>
+			</module>
+			<module name="fastWaterFilter" type="FastRidgedMultifractal" seed_additive="3">
+				<property name="frequency" value="0.05"/>
+			</module>
+			<module name="scaleBiasLandFilter" type="ScaleBiasOutput">
+				<property name="sourceModule" value="fastWaterFilter"/>
+				<property name="scale" value="1"/>
+				<property name="bias" value="0.25"/>
+			</module>
+			<module name="fastLandWater" type="Blend">
+				<property name="controlModule" value="scaleBiasLandFilter"/>
+				<property name="sourceModule1" value="landBase"/>
+				<property name="sourceModule2" value="fastWaterClamped"/>
+			</module>
+			<module name="finalLand" type="Blend">
+				<property name="controlModule" value="fastMountainsScaled"/>
+				<property name="sourceModule1" value="fastLandWater"/>
+				<property name="sourceModule2" value="fastMountainsScaled"/>
+			</module>
+			<module name="scaleBiasOutput" type="ScaleBiasOutput">
+				<property name="sourceModule" value="finalLand"/>
+				<property name="scale" value="182"/>
+			</module>
+
+
+			<!--From here, processing code-->
+			<module name="GTPscaled" type="ScaleBiasOutput">
+				<property name="sourceModule" value="scaleBiasOutput"/>
+				<!--Set your output module as sourceModule-->
+				<property name="scale" value="0.00916"/>
+				<property name="bias" value="-0.742"/>
+			</module>
+			<module name="GTPout" type="ScaleInput">
+				<property name="sourceModule" value="GTPscaled"/>
+				<property name="x" value="0.001953125"/>
+				<property name="z" value="0.001953125"/>
+			</module>
+
+			<output module="GTPout"/>
+		</biome_generator>
+
+		<biome_generator name="BoundCheck">
+			<!--Example terrain code-->
+			<module name="terrainOutput" type="FastNoise">
+				<property name="frequency" value="0.2"/>
+				<property name="octaveCount" value="10"/>
+			</module>
+
+
+			<!--From here, processing code-->
+			<module name="GTPout" type="ScaleInput">
+				<property name="sourceModule" value="terrainOutput"/>
+				<!--Set your output module as sourceModule-->
+				<property name="x" value="0.001953125"/>
+				<property name="z" value="0.001953125"/>
+			</module>
+
+			<output module="GTPout"/>
+		</biome_generator>
+	</biome_generators>
+
+	<biome_spawn_rules>
+		<biome_spawn_rule name="snow">
+			<biome_generator range=" 0.846, 1.000"/>
+		</biome_spawn_rule>
+		<biome_spawn_rule name="forest">
+			<biome_generator range=" 0.692, 0.846"/>
+		</biome_spawn_rule>
+		<biome_spawn_rule name="pine_forest">
+			<biome_generator range=" 0.538, 0.692"/>
+		</biome_spawn_rule>
+		<biome_spawn_rule name="plains">
+			<biome_generator range=" 0.385, 0.538"/>
+		</biome_spawn_rule>
+		<biome_spawn_rule name="desert">
+			<biome_generator range=" 0.231, 0.385"/>
+		</biome_spawn_rule>
+		<biome_spawn_rule name="water">
+			<biome_generator range=" 0.077, 0.231"/>
+		</biome_spawn_rule>
+		<biome_spawn_rule name="wasteland">
+			<biome_generator range="-0.077, 0.077"/>
+		</biome_spawn_rule>
+		<biome_spawn_rule name="burnt_forest">
+			<biome_generator range="-0.231,-0.077"/>
+		</biome_spawn_rule>
+		<biome_spawn_rule name="city">
+			<biome_generator range="-0.385,-0.231"/>
+		</biome_spawn_rule>
+		<biome_spawn_rule name="city_wasteland">
+			<biome_generator range="-0.538,-0.385"/>
+		</biome_spawn_rule>
+		<biome_spawn_rule name="wasteland_hub">
+			<biome_generator range="-0.692,-0.538"/>
+		</biome_spawn_rule>
+		<biome_spawn_rule name="caveFloor">
+			<biome_generator range="-0.846,-0.692"/>
+		</biome_spawn_rule>
+		<biome_spawn_rule name="caveCeiling">
+			<biome_generator range="-1.000,-0.846"/>
+		</biome_spawn_rule>
+	</biome_spawn_rules>
+</rwgmixer>
