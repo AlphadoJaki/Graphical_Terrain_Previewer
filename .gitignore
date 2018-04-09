@@ -1,0 +1,160 @@
+# Windows thumbnail cache files
+Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+
+# Dump file
+*.stackdump
+
+# Folder config file
+[Dd]esktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# macOS General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# macOS Icon must end with two \r
+Icon
+
+# macOS Thumbnails
+._*
+
+# macOS Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# macOS Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Linux General
+*~
+
+# Linux temporary files which can be created if a process still has a handle open of a deleted file
+.fuse_hidden*
+
+# Linux KDE directory preferences
+.directory
+
+# Linux Linux trash folder which might appear on any partition or disk
+.Trash-*
+
+# Linux .nfs files are created when an open file is removed but is still being accessed
+.nfs*
+
+# GPG
+secring.*
+
+# Mercurial
+.hg/
+.hgignore
+.hgsigs
+.hgsub
+.hgsubstate
+.hgtags
+
+# Vim Swap
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-v][a-z]
+[._]sw[a-p]
+
+# Vim Session
+Session.vim
+
+# Vim Temporary
+.netrwhist
+*~
+# Vim Auto-generated tag files
+tags
+
+# Emacs -*- mode: gitignore; -*-
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Emacs Org-mode
+.org-id-locations
+*_archive
+
+# Emacs flymake-mode
+*_flymake.*
+
+# Emacs eshell files
+/eshell/history
+/eshell/lastdir
+
+# Emacs elpa packages
+/elpa/
+
+# Emacs reftex files
+*.rel
+
+# Emacs AUCTeX auto folder
+/auto/
+
+# Emacs cask packages
+.cask/
+dist/
+
+# Emacs Flycheck
+flycheck_*.el
+
+# Emacs server auth directory
+/server/
+
+# Emacs projectiles files
+.projectile
+
+# Emacs directory configuration
+.dir-locals.el
+
+# Xcode
+#
+# gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
+
+## User settings
+xcuserdata/
+
+## compatibility with Xcode 8 and earlier (ignoring not required starting Xcode 9)
+*.xcscmblueprint
+*.xccheckout
+
+## compatibility with Xcode 3 and earlier (ignoring not required starting Xcode 4)
+build/
+DerivedData/
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
